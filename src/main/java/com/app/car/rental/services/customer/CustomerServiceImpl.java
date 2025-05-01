@@ -5,10 +5,14 @@ import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 
 import com.app.car.rental.dto.BookACarDto;
 import com.app.car.rental.dto.CarDto;
+import com.app.car.rental.dto.CarDtoListDto;
+import com.app.car.rental.dto.SearchCarDto;
 import com.app.car.rental.entity.BookACar;
 import com.app.car.rental.entity.Car;
 import com.app.car.rental.entity.User;
@@ -81,6 +85,26 @@ public class CustomerServiceImpl implements CustomerService {
 	public List<BookACarDto> getBookingsByUserId(Long userId) {
 		return bookACarRepository.findAllByUserId(userId).stream().map(BookACar::getBookACarDto)
 				.collect(Collectors.toList());
+	}
+
+	@Override
+	public CarDtoListDto searchCar(SearchCarDto searchCarDto) {
+		// TODO Auto-generated method stub
+		Car car = new Car();
+		car.setBrand(searchCarDto.getBrand());
+		car.setType(searchCarDto.getType());
+		car.setTransmission(searchCarDto.getTransmission());
+		car.setColor(searchCarDto.getColor());
+		ExampleMatcher exampleMatcher = ExampleMatcher.matchingAll()
+				.withMatcher("brand", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
+				.withMatcher("type", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
+				.withMatcher("transmission", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
+				.withMatcher("color", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase());
+		Example<Car> carExample = Example.of(car, exampleMatcher);
+		List<Car> carList = carRepository.findAll(carExample);
+		CarDtoListDto carDtoListDto = new CarDtoListDto();
+		carDtoListDto.setCarDtoList(carList.stream().map(Car::getCarDto).collect(Collectors.toList()));
+		return carDtoListDto;
 	}
 
 }

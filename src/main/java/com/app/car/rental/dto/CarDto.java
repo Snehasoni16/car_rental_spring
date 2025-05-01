@@ -2,7 +2,6 @@ package com.app.car.rental.dto;
 
 import java.util.Date;
 
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
 
 import lombok.Data;
@@ -23,7 +22,7 @@ public class CarDto {
 
 	private Long price;
 
-	@DateTimeFormat(pattern = "EEE MMM dd yyyy HH:mm:ss 'IST'Z (zzzz)")
+	// @DateTimeFormat(pattern = "EEE MMM dd yyyy HH:mm:ss 'IST'Z (zzzz)")
 	private Date year;
 
 	private MultipartFile image;
